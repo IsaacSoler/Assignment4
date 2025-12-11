@@ -30,7 +30,7 @@ export class ProductListComponent implements OnInit {
         this.products = data;
         this.loading = false;
         this.error = '';
-        this.cdr.detectChanges();   // ensure view updates
+        this.cdr.detectChanges();   
       },
       error: (err) => {
         console.error('Error loading products:', err);
