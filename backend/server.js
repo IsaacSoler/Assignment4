@@ -13,50 +13,49 @@ const products = [
     name: 'Laptop',
     price: 899,
     description: 'Powerful laptop',
-    image: 'https://via.placeholder.com/200'
+    image: '/assets/laptop.jpg'
   },
   {
     id: 2,
     name: 'Headphones',
     price: 129,
     description: 'Noise-cancelling headphones',
-    image: 'https://via.placeholder.com/200'
+    image: '/assets/headphones.jpg'
   },
   {
     id: 3,
-    name: 'Keyboard',
-    price: 49,
-    description: 'Mechanical keyboard',
-    image: 'https://via.placeholder.com/200'
+    name: 'Smartphone',
+    price: 499,
+    description: 'Latest model smartphone',
+    image: '/assets/smartphone.jpg'
   },
   {
     id: 4,
-    name: 'Mouse',
-    price: 29,
-    description: 'Wireless mouse',
-    image: 'https://via.placeholder.com/200'
+    name: 'Smartwatch',
+    price: 299,
+    description: 'Feature-rich smartwatch',
+    image: '/assets/smartwatch.jpg'
   }
 ];
 
-// 1. GET /api/products
 app.get('/api/products', (req, res) => {
   res.json(products);
 });
 
-// 2. POST /api/select-product
+
 app.post('/api/select-product', (req, res) => {
   selectedProduct = req.body;
   res.json({ message: 'Product stored' });
 });
 
-// 3. GET /api/selected-product
+
 app.get('/api/selected-product', (req, res) => {
   res.json(selectedProduct);
 });
 
-// 4. POST /api/submit-order
+
 app.post('/api/submit-order', (req, res) => {
-  // you could log req.body here if you want to see the order
+
   res.json({ message: 'Your item will be delivered soon.' });
 });
 

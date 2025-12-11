@@ -1,6 +1,16 @@
 <h2 class="mb-4 text-center">Available Products</h2>
 
-<div class="row g-4">
+
+<div class="text-center mt-4" *ngIf="loading">
+  Loading products...
+</div>
+
+<div class="text-center mt-2 text-danger" *ngIf="!loading && error">
+  {{ error }}
+</div>
+
+
+<div class="row g-4" *ngIf="!loading && !error">
   <div class="col-12 col-sm-6 col-lg-3" *ngFor="let p of products">
     <div class="card h-100 shadow-sm">
       <img [src]="p.image" class="card-img-top" alt="{{ p.name }}" />

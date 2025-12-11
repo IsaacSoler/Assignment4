@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../services/product-service';
 
-
 @Component({
   selector: 'app-product-list',
   standalone: true,
@@ -13,6 +12,8 @@ import { ProductService } from '../../services/product-service';
 })
 export class ProductListComponent implements OnInit {
   products: any[] = [];
+  loading = true;
+  error = '';
 
   constructor(
     private productService: ProductService,
@@ -20,14 +21,36 @@ export class ProductListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.productService.getProducts().subscribe((data: any) => {
-      this.products = data;
+    this.loadProducts();
+  }
+
+  private loadProducts(): void {
+    this.productService.getProducts().subscribe({
+      next: (data: any) => {
+        console.log('Products from backend:', data);
+        this.products = Array.isArray(data) ? data : [];
+        this.loading = false;
+        this.error = '';
+      },
+      error: (err) => {
+        console.error('Error loading products, will retry in 2s:', err);
+        this.error = 'Error loading products. Retrying...';
+        this.loading = true;
+
+        // Retry after 2 seconds
+        setTimeout(() => this.loadProducts(), 2000);
+      }
     });
   }
 
   buy(product: any) {
-    this.productService.selectProduct(product).subscribe(() => {
-      this.router.navigate(['/review']);
+    this.productService.selectProduct(product).subscribe({
+      next: () => {
+        this.router.navigate(['/review']);
+      },
+      error: (err) => {
+        console.error('Error selecting product:', err);
+      }
     });
   }
 }
