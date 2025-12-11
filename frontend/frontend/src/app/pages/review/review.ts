@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ProductService } from '../../services/product-service';
-
 
 @Component({
   selector: 'app-review',
@@ -11,20 +10,41 @@ import { ProductService } from '../../services/product-service';
   styleUrl: './review.css'
 })
 export class ReviewComponent implements OnInit {
-  product: any;
+  product: any = null;
   message = '';
 
-  constructor(private productService: ProductService) {}
+  constructor(
+    private productService: ProductService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
-    this.productService.getSelectedProduct().subscribe((data: any) => {
-      this.product = data;
+    console.log('ReviewComponent initialized');
+
+    this.productService.getSelectedProduct().subscribe({
+      next: (data: any) => {
+        console.log('Selected product from backend:', data);
+        this.product = data;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error getting selected product:', err);
+      }
     });
   }
 
   submitOrder() {
-    this.productService.submitOrder({ product: this.product }).subscribe((res: any) => {
-      this.message = res.message;
+    console.log('Submitting order for:', this.product);
+
+    this.productService.submitOrder({ product: this.product }).subscribe({
+      next: (res: any) => {
+        console.log('Submit-order response:', res);
+        this.message = res.message;
+        this.cdr.detectChanges();
+      },
+      error: (err) => {
+        console.error('Error submitting order:', err);
+      }
     });
   }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule } from '@angular/router';
 import { ProductService } from '../../services/product-service';
@@ -17,33 +17,36 @@ export class ProductListComponent implements OnInit {
 
   constructor(
     private productService: ProductService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
-    this.loadProducts();
-  }
+    console.log('ProductListComponent initialized');
 
-  private loadProducts(): void {
     this.productService.getProducts().subscribe({
-      next: (data: any) => {
+      next: (data: any[]) => {
         console.log('Products from backend:', data);
-        this.products = Array.isArray(data) ? data : [];
+        this.products = data;
         this.loading = false;
         this.error = '';
+        this.cdr.detectChanges();   // ensure view updates
       },
       error: (err) => {
-        console.error('Error loading products, will retry in 2s:', err);
-        this.error = 'Error loading products. Retrying...';
-        this.loading = true;
-        setTimeout(() => this.loadProducts(), 2000);
+        console.error('Error loading products:', err);
+        this.error = 'Failed to load products. Please try again.';
+        this.loading = false;
+        this.cdr.detectChanges();
       }
     });
   }
 
   buy(product: any) {
+    console.log('Buy clicked with product:', product);
+
     this.productService.selectProduct(product).subscribe({
-      next: () => {
+      next: (res) => {
+        console.log('Select-product response:', res);
         this.router.navigate(['/review']);
       },
       error: (err) => {
