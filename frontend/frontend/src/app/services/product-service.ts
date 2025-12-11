@@ -12,7 +12,7 @@ export class ProductService {
   constructor(private http: HttpClient) {}
 
   getProducts(): Observable<any> {
-    // server.js returns the array directly, not { products: [...] }
+
     return this.http.get(`${this.backend}/products`);
   }
 

@@ -36,8 +36,6 @@ export class ProductListComponent implements OnInit {
         console.error('Error loading products, will retry in 2s:', err);
         this.error = 'Error loading products. Retrying...';
         this.loading = true;
-
-        // Retry after 2 seconds
         setTimeout(() => this.loadProducts(), 2000);
       }
     });
